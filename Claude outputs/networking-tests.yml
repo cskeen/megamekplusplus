@@ -47,6 +47,7 @@ jobs:
           --tests 'megamek.common.net.*'
           --tests 'megamek.server.net.*'
           --tests 'megamek.server.ServerPacketHandlingTest'
+          --tests 'megamek.server.commands.NetStatsCommandTest'
 
       - name: Upload test reports
         uses: actions/upload-artifact@v7

@@ -60,6 +60,24 @@ thread has exited (each disconnect runs to completion on its own) before calling
 reports a client losing its own player, check for a server from an earlier test that was still
 winding down.
 
+## Capturing the networking baseline
+
+`megamek.server.net.NetStatsBaselineTest` runs a headless game — four Princess companies of ten
+meks on a 3x3 board set (`testresources/data/scenarios/networking/NetBaseline.mms`) with a unit-less
+watcher — with timing on, and writes `megamek/build/reports/netstats/baseline.md`: every command's
+packet and byte counts, a per-phase table with wall time, per-client totals and the pump figures.
+It is skipped unless the environment variable `NET_BASELINE` is `true`, because it takes several
+minutes:
+
+```
+$env:NET_BASELINE="true"; $env:NET_BASELINE_ROUNDS="3"
+.\gradlew.bat :megamek:test -x checkstyleMain --tests megamek.server.net.NetStatsBaselineTest
+```
+
+Copy the report into `docs/networking/` as `BASELINE-<version>.md` when it is the reference for a
+release, and keep the scenario file unchanged so later runs stay comparable. Every optimisation PR
+re-runs it and reports the before/after columns.
+
 ## Shared helpers
 
 - `megamek.server.net.InProcessHarness` — one server, N headless clients, `await(...)` helpers and a

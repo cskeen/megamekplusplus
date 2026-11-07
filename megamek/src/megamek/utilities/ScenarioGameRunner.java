@@ -405,6 +405,16 @@ public class ScenarioGameRunner {
      * <p>Clients are disconnected before the server dies so each one closes its socket and, for a bot, stops its
      * precognition thread. Skipping this is what makes a long batch degrade: see {@link #connectedClients}.</p>
      */
+    /** @return the server this runner hosts the game on, e.g. to read its network counters after a run */
+    public Server getServer() {
+        return server;
+    }
+
+    /** @return the watcher and bot clients connected by {@link #runGame}, in connection order */
+    public List<AbstractClient> getConnectedClients() {
+        return List.copyOf(connectedClients);
+    }
+
     public void shutdown() {
         for (AbstractClient client : connectedClients) {
             try {

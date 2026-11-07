@@ -237,13 +237,20 @@ Also capture the same with 1 client to see the per-connection cost. Commit the t
 `docs/networking/BASELINE-0.51.01.4.md` with JVM and machine. This table is what Phases
 2–6 are measured against.
 
-### Status (2026-11-07)
+### Status (2026-11-07) — Phase 1 complete
 
-PR 0 (characterization tests + harness), PR 1 (`NetStats` + connection hooks) and PR 2 (server/client
-wiring, pump counters, `/netstats`, phase summary) are written and green on the networking
-selection (93 tests). Remaining: full upstream suite run, commits, and the baseline capture. First
-numbers from `/netstats`: a lobby join is 26 packets / ~25 KB on the wire; `SENDING_MAP_SETTINGS`
-is sent twice per join at 6.6 KB each (71 KB raw) — a Phase 4 lead.
+PR 0 (characterization tests + harness), PR 1 (`NetStats` + connection hooks), PR 2 (server/client
+wiring, pump counters, `/netstats`, phase summary) and the baseline capture
+(`NetStatsBaselineTest`, `docs/networking/BASELINE-0.51.01.4.md`) are written and green on the
+networking selection (93 tests + the on-demand baseline). Remaining: full upstream suite run and
+commits.
+
+Baseline headline (4 bots x 10 meks, 3x3 boards, two rounds, loopback): 21,946 packets, 67.1 MB on
+the wire. `SENDING_ENTITIES` is 64% of bytes — the full entity list goes to every client on every
+phase change, ~306 KB each, marshalled once per client; `ENTITY_UPDATE` is 28%; `CHAT` is 63% of
+packets. Pump longest wait 947 ms, from phase-change broadcasts running inside packet handlers.
+This reorders nothing in the priority list but sharpens Phase 4's target: the per-phase full
+entity resend first, then `ENTITY_UPDATE` and `PLAYER_UPDATE` deltas.
 
 ### Deliverables and order
 
